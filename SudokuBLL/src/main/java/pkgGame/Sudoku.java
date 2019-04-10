@@ -401,6 +401,7 @@ public class Sudoku extends LatinSquare {
 		private int iRow;
 		private java.util.ArrayList<java.lang.Integer> lstValidValues;
 		
+		
 		public int getiCol() {
 			return iCol;
 		}
@@ -408,6 +409,15 @@ public class Sudoku extends LatinSquare {
 		public int getiRow() {
 			return iRow;
 		}
+
+		public java.util.ArrayList<java.lang.Integer> getLstValidValues() {
+			return lstValidValues;
+		}
+
+		public void setLstValidValues(java.util.ArrayList<java.lang.Integer> lstValidValues) {
+			this.lstValidValues = lstValidValues;
+		}
+		
 		
 		
 		
