@@ -1,6 +1,8 @@
 package pkgGame;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import pkgHelper.LatinSquare;
@@ -15,6 +17,8 @@ import pkgHelper.LatinSquare;
  *
  */
 public class Sudoku extends LatinSquare {
+
+	private HashMap<Cell, Integer> map;
 
 	/**
 	 * 
@@ -397,6 +401,10 @@ public class Sudoku extends LatinSquare {
 	}
 
 	private class Cell {
+
+		private int iRow;
+		private int iCol;
+		private ArrayList<Integer> lstValidValues;
 
 	}
 }
