@@ -401,6 +401,31 @@ public class Sudoku extends LatinSquare {
 	}
 
 	private class Cell {
+		private int iCol;
+		private int iRow;
+		private java.util.ArrayList<java.lang.Integer> lstValidValues;
+		
+		
+		public int getiCol() {
+			return iCol;
+		}
+		
+		public int getiRow() {
+			return iRow;
+		}
+
+		public java.util.ArrayList<java.lang.Integer> getLstValidValues() {
+			return lstValidValues;
+		}
+
+		public void setLstValidValues(java.util.ArrayList<java.lang.Integer> lstValidValues) {
+			this.lstValidValues = lstValidValues;
+		}
+		
+		
+		
+		
+		
 
 		private int iRow;
 		private int iCol;
