@@ -1,6 +1,7 @@
 package pkgGame;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -18,7 +19,7 @@ import pkgHelper.LatinSquare;
  */
 public class Sudoku extends LatinSquare {
 
-	private HashMap<Cell, Integer> map;
+	public HashMap<Cell, Integer> map;
 
 	/**
 	 * 
@@ -409,14 +410,44 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 
+	public Sudoku.Cell GetNextCell(Sudoku.Cell c) {
+
+		int row = c.getiRow();
+		int col = c.getiCol() + 1;
+
+		if (col >= iSize && row == iSize - iSqrtSize) {
+			return null;
+		}
+		if (col >= iSize) {
+			row++;
+			col = 0;
+		}
+		while (row < iSqrtSize && col < iSqrtSize) {
+			col++;
+			while (row >= iSqrtSize && row < iSize - iSqrtSize && col >= iSqrtSize && col < iSize - iSqrtSize) {
+				col++; // shift right
+			}
+			while (row >= iSize - iSqrtSize && row < iSize && col >= iSize - iSqrtSize && col < iSize) {
+				col++; // shift to the end
+			}
+			if (col >= iSize) {
+				row++;
+				col = 0;
+			}
+
+			return cells.get(Objects.hash(row, col));
+
+		}
+	}
+
 	private class Cell {
 		private int iCol;
 		private int iRow;
 		private java.util.ArrayList<java.lang.Integer> lstValidValues;
 
-		public Cell(int iCol, int iRow) {
-			this.iCol = iCol;
-			this.iRow = iRow;
+		public Cell(int iRow2, int iCol2) {
+			// TODO Auto-generated constructor stub
+
 		}
 
 		public int getiCol() {
@@ -442,6 +473,39 @@ public class Sudoku extends LatinSquare {
 
 		public void ShuffleValidValues() {
 
+		}
+
+		private void SetCells() {
+			for (int iRow = 0; iRow < iSize; iRow++) {
+				for (int iCol = 0; iCol < iSize; iCol++) {
+					Cell c = new Cell(iRow, iCol);
+					c.setLstValidValues(getAllValidCellValues(iCol, iRow));
+					c.shuffleValidValues();
+					map.put(c, c.hashCode());
+				}
+			}
+		}
+
+		private void shuffleValidValues() {
+			// TODO Auto-generated method stub
+
+		}
+
+		private ArrayList<Integer> getAllValidCellValues(int iCol2, int iRow2) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public boolean equals(Object obj) {
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof Cell)) {
+				return false;
+			}
+
+			Cell cell1 = (Cell) obj;
+			return (cell1.iRow == this.iRow) && (cell1.iCol == this.iCol);
 		}
 
 	}

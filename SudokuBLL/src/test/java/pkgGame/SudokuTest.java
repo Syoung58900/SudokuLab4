@@ -90,6 +90,10 @@ public class SudokuTest {
 		}
 
 	}
+	
+	
+		
+
 
 	@Test
 	public void Sudoku_test1() {
