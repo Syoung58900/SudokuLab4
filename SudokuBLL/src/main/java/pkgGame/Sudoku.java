@@ -2,6 +2,8 @@ package pkgGame;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 import pkgHelper.LatinSquare;
@@ -16,6 +18,8 @@ import pkgHelper.LatinSquare;
  *
  */
 public class Sudoku extends LatinSquare {
+
+	public HashMap<Cell, Integer> map;
 
 	/**
 	 * 
@@ -312,6 +316,15 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 
+	private void fillRemaining(Cell c) {
+		int i = this.getPuzzle()[c.getiRow()][c.getiCol()];
+		for (int val : c.getLstValidValues()) {
+
+			this.getPuzzle()[c.getiRow()][c.getiCol()] = val;
+			fillRemaining(c);
+		}
+	}
+
 	/**
 	 * SetRegion - purpose of this method is to set the values of a given region
 	 * (they will be shuffled later)
@@ -396,52 +409,51 @@ public class Sudoku extends LatinSquare {
 			ar[i] = a;
 		}
 	}
-	
+
 	public Sudoku.Cell GetNextCell(Sudoku.Cell c) {
 
-		int row = c.getiRow();								
-		int col = c.getiCol() + 1;							
+		int row = c.getiRow();
+		int col = c.getiCol() + 1;
 
-		if (col >= iSize && row == iSize - iSqrtSize) {		
-			return null;									
+		if (col >= iSize && row == iSize - iSqrtSize) {
+			return null;
 		}
-		if (col >= iSize) {									
+		if (col >= iSize) {
 			row++;
 			col = 0;
 		}
-		while (row < iSqrtSize && col < iSqrtSize) {		
-			col++;												
-		while (row >= iSqrtSize && row < iSize - iSqrtSize && col >= iSqrtSize && col < iSize - iSqrtSize) {	
-			col++;																			// shift right
-		}
-		while (row >= iSize - iSqrtSize && row < iSize && col >= iSize - iSqrtSize && col < iSize) {	
-			col++;																//shift to the end
-		}
-		if (col >= iSize) {									
-			row++;
-			col = 0;
-		}
+		while (row < iSqrtSize && col < iSqrtSize) {
+			col++;
+			while (row >= iSqrtSize && row < iSize - iSqrtSize && col >= iSqrtSize && col < iSize - iSqrtSize) {
+				col++; // shift right
+			}
+			while (row >= iSize - iSqrtSize && row < iSize && col >= iSize - iSqrtSize && col < iSize) {
+				col++; // shift to the end
+			}
+			if (col >= iSize) {
+				row++;
+				col = 0;
+			}
 
-		return cells.get(Objects.hash(row , col));			
+			return Cell.get(Objects.hash(row, col));
 
+		}
 	}
-	
-	
 
 	private class Cell {
 		private int iCol;
 		private int iRow;
 		private java.util.ArrayList<java.lang.Integer> lstValidValues;
-		
-		
+
 		public Cell(int iRow2, int iCol2) {
 			// TODO Auto-generated constructor stub
+
 		}
 
 		public int getiCol() {
 			return iCol;
 		}
-		
+
 		public int getiRow() {
 			return iRow;
 		}
@@ -453,28 +465,39 @@ public class Sudoku extends LatinSquare {
 		public void setLstValidValues(java.util.ArrayList<java.lang.Integer> lstValidValues) {
 			this.lstValidValues = lstValidValues;
 		}
-		
-		
+
+
+		public int hashCode() {
+			Objects.hash(iRow, iCol);
+			return 0;
+		}
+
+		public void ShuffleValidValues() {
+
+		}
+
+
 		private void SetCells() {
-			for(int iRow = 0; iRow < iSize; iRow++) {
+			for (int iRow = 0; iRow < iSize; iRow++) {
 				for (int iCol = 0; iCol < iSize; iCol++) {
 					Cell c = new Cell(iRow, iCol);
-					c.setLstValidValues(getAllValidCellValues(iCol,iRow));
+					c.setLstValidValues(getAllValidCellValues(iCol, iRow));
 					c.shuffleValidValues();
-					Cell.put(c.hashCode(), c);
+					map.put(c, c.hashCode());
 				}
 			}
 		}
 
 		private void shuffleValidValues() {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		private ArrayList<Integer> getAllValidCellValues(int iCol2, int iRow2) {
 			// TODO Auto-generated method stub
 			return null;
 		}
+
 		public boolean equals(Object obj) {
 			if (obj == this) {
 				return true;
@@ -482,19 +505,18 @@ public class Sudoku extends LatinSquare {
 			if (!(obj instanceof Cell)) {
 				return false;
 			}
-			
+
 			Cell cell1 = (Cell) obj;
 			return (cell1.iRow == this.iRow) && (cell1.iCol == this.iCol);
+			}
 		}
+}
+
 	
 		
 		
 		
 
-	}
-}
-		
-		
 		
 		
 
