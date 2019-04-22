@@ -396,6 +396,35 @@ public class Sudoku extends LatinSquare {
 			ar[i] = a;
 		}
 	}
+	
+	public Sudoku.Cell GetNextCell(Sudoku.Cell c) {
+
+		int row = c.getiRow();								
+		int col = c.getiCol() + 1;							
+
+		if (col >= iSize && row == iSize - iSqrtSize) {		
+			return null;									
+		}
+		if (col >= iSize) {									
+			row++;
+			col = 0;
+		}
+		while (row < iSqrtSize && col < iSqrtSize) {		
+			col++;												
+		while (row >= iSqrtSize && row < iSize - iSqrtSize && col >= iSqrtSize && col < iSize - iSqrtSize) {	
+			col++;																			// shift right
+		}
+		while (row >= iSize - iSqrtSize && row < iSize && col >= iSize - iSqrtSize && col < iSize) {	
+			col++;																//shift to the end
+		}
+		if (col >= iSize) {									
+			row++;
+			col = 0;
+		}
+
+		return cells.get(Objects.hash(row , col));			
+
+	}
 
 	private class Cell {
 		private int iCol;
