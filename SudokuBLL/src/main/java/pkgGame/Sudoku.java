@@ -1,8 +1,8 @@
 package pkgGame;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 import pkgHelper.LatinSquare;
@@ -315,6 +315,15 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 
+	private void fillRemaining(Cell c) {
+		int i = this.getPuzzle()[c.getiRow()][c.getiCol()];
+		for (int val : c.getLstValidValues()) {
+
+			this.getPuzzle()[c.getiRow()][c.getiCol()] = val;
+			fillRemaining(c);
+		}
+	}
+
 	/**
 	 * SetRegion - purpose of this method is to set the values of a given region
 	 * (they will be shuffled later)
@@ -404,12 +413,16 @@ public class Sudoku extends LatinSquare {
 		private int iCol;
 		private int iRow;
 		private java.util.ArrayList<java.lang.Integer> lstValidValues;
-		
-		
+
+		public Cell(int iCol, int iRow) {
+			this.iCol = iCol;
+			this.iRow = iRow;
+		}
+
 		public int getiCol() {
 			return iCol;
 		}
-		
+
 		public int getiRow() {
 			return iRow;
 		}
@@ -421,15 +434,15 @@ public class Sudoku extends LatinSquare {
 		public void setLstValidValues(java.util.ArrayList<java.lang.Integer> lstValidValues) {
 			this.lstValidValues = lstValidValues;
 		}
-		
-		
-		
-		
-		
 
-		private int iRow;
-		private int iCol;
-		private ArrayList<Integer> lstValidValues;
+		public int hashCode() {
+			Objects.hash(iRow, iCol);
+			return 0;
+		}
+
+		public void ShuffleValidValues() {
+
+		}
 
 	}
 }
