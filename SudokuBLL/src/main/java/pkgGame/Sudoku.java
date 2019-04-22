@@ -454,6 +454,7 @@ public class Sudoku extends LatinSquare {
 			this.lstValidValues = lstValidValues;
 		}
 		
+		
 		private void SetCells() {
 			for(int iRow = 0; iRow < iSize; iRow++) {
 				for (int iCol = 0; iCol < iSize; iCol++) {
@@ -485,10 +486,17 @@ public class Sudoku extends LatinSquare {
 			Cell cell1 = (Cell) obj;
 			return (cell1.iRow == this.iRow) && (cell1.iCol == this.iCol);
 		}
-		
+	
 		
 		
 		
 
 	}
 }
+		
+		
+		
+		
+
+
+
