@@ -425,6 +425,8 @@ public class Sudoku extends LatinSquare {
 		return cells.get(Objects.hash(row , col));			
 
 	}
+	
+	
 
 	private class Cell {
 		private int iCol;
@@ -471,6 +473,17 @@ public class Sudoku extends LatinSquare {
 		private ArrayList<Integer> getAllValidCellValues(int iCol2, int iRow2) {
 			// TODO Auto-generated method stub
 			return null;
+		}
+		public boolean equals(Object obj) {
+			if (obj == this) {
+				return true;
+			}
+			if (!(obj instanceof Cell)) {
+				return false;
+			}
+			
+			Cell cell1 = (Cell) obj;
+			return (cell1.iRow == this.iRow) && (cell1.iCol == this.iCol);
 		}
 		
 		
