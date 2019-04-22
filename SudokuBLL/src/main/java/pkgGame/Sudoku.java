@@ -4,6 +4,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 
@@ -40,6 +41,8 @@ public class Sudoku extends LatinSquare {
 	 */
 
 	private int iSqrtSize;
+	
+	private HashMap<Integer, Cell> cells = new HashMap<Integer, Cell>();
 
 	/**
 	 * Sudoku - for Lab #2... do the following:
@@ -65,8 +68,12 @@ public class Sudoku extends LatinSquare {
 
 		int[][] puzzle = new int[iSize][iSize];
 		super.setLatinSquare(puzzle);
+		
 		FillDiagonalRegions();
+		
+		SetCells();
 	}
+
 
 	/**
 	 * Sudoku - pass in a given two-dimensional array puzzle, create an instance.
@@ -317,12 +324,18 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 
-	private void fillRemaining(Cell c) {
-		int i = this.getPuzzle()[c.getiRow()][c.getiCol()];
-		for (int val : c.getLstValidValues()) {
-
-			this.getPuzzle()[c.getiRow()][c.getiCol()] = val;
-			fillRemaining(c);
+	private boolean fillRemaining(Cell c) {
+		if(c == null)
+			return true;
+		
+		for(int num: c.getLstValidValues()) {
+			if(isValidValue(c, num)) {
+				this.getPuzzle()[c.getiRow()][c.getiCol()] = num;
+				
+				if(fillRemaining(c.GetNextCell(c)))
+					return true;
+				this.getPuzzle()[c.getiRow()][c.getiCol()] = 0;	
+			}
 		}
 	}
 
@@ -440,6 +453,42 @@ public class Sudoku extends LatinSquare {
 
 		}
 	}
+	
+	private void SetCells() {
+		for (int iRow = 0; iRow < iSize; iRow++) {
+			for (int iCol = 0; iCol < iSize; iCol++) {
+				
+				Cell c = new Cell(iRow, iCol);
+				c.setlstValidValues(getAllValidCellValues(iCol, iRow));
+				c.ShuffleValidValues();
+				cells.put(c.hashCode(), c);
+			}
+		}
+	}
+	
+	private void ShowAvailableValues() {
+		for (int iRow = 0; iRow < iSize; iRow++) {
+			for(int iCol = 0; iCol < iSize; iCol++) {
+				
+				Cell c = cells.get(Objects.hash(iRow, iCol));
+				System.out.print("Cell[row:col]] :" + c.getiRow() + " " +c.getiCol() + "--- ");
+				for(Integer i : c.getLstValidValues()) {
+					System.out.print(i + " ");
+				}
+			}
+		}
+	}
+	/*
+	private HashSet<Integer> getAllValidCellValues(int iCol, int iRow){
+		HashSet<Integer> hsCellRange = new HashSet<Integer>();
+		if(this.getPuzzle()[iRow][iCol] > 0) {
+			hsCellRange.add(new Integer(this.getPuzzle()[iRow][iCol]));
+				return hsCellRange;
+		}
+		for()
+		}
+	}
+	*/
 
 	private class Cell {
 		private int iCol;
@@ -488,18 +537,6 @@ public class Sudoku extends LatinSquare {
 		public void ShuffleValidValues() {
 			Collections.shuffle(lstValidValues);
 		}
-
-
-		private void SetCells() {
-			for (int iRow = 0; iRow < iSize; iRow++) {
-				for (int iCol = 0; iCol < iSize; iCol++) {
-					Cell c = new Cell(iRow, iCol);
-					c.setLstValidValues(getAllValidCellValues(iCol, iRow));
-					c.shuffleValidValues();
-					map.put(c, c.hashCode());
-				}
-			}
-		}
 		
 		public Cell GetNextCell (Cell c) {
 			int iCol = c.getiCol() + 1;
@@ -529,22 +566,7 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 }
-		/*
-		private boolean fillRemaining(Cell c) {
-			if(c == null)
-				return true;
-			
-			for(int num: c.getLstValidValues()) {
-				if(isValidValue(c, num)) {
-					this.getPuzzle()[c.getiRow()][c.getiCol()] = num;
-					
-					if(fillRemaining(c.getNextCell(c)))
-						return true;
-					this.getPuzzle()[c.getiRow()][c.getiCol()] = 0;	
-				}
-			}
-		}
-		*/
+		
 		
 		
 
