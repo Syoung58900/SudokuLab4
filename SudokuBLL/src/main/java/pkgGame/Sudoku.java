@@ -2,6 +2,7 @@ package pkgGame;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -443,11 +444,12 @@ public class Sudoku extends LatinSquare {
 	private class Cell {
 		private int iCol;
 		private int iRow;
-		private java.util.ArrayList<java.lang.Integer> lstValidValues;
+		private ArrayList<Integer> lstValidValues = new ArrayList<Integer>();
 
-		public Cell(int iRow2, int iCol2) {
-			// TODO Auto-generated constructor stub
-
+		public Cell(int iRow, int iCol) {
+			super();
+			this.iRow = iRow;
+			this.iCol = iCol;
 		}
 
 		public int getiCol() {
@@ -458,22 +460,33 @@ public class Sudoku extends LatinSquare {
 			return iRow;
 		}
 
-		public java.util.ArrayList<java.lang.Integer> getLstValidValues() {
+		public ArrayList<Integer> getLstValidValues() {
 			return lstValidValues;
 		}
 
-		public void setLstValidValues(java.util.ArrayList<java.lang.Integer> lstValidValues) {
-			this.lstValidValues = lstValidValues;
+		public void setLstValidValues(HashSet<Integer> hsValidValues) {
+			lstValidValues = new ArrayList<Integer>(hsValidValues);
 		}
 
-
+		@Override
 		public int hashCode() {
-			Objects.hash(iRow, iCol);
-			return 0;
+			return Objects.hash(iRow, iCol);
 		}
+		@Override
+		public boolean equals(Object o) {
+			if (o == this) {
+				return true;
+			}
+			if (!(o instanceof Cell)) {
+				return false;
+			}
+
+			Cell c = (Cell) o;
+			return iRow == c.iRow && iCol == c.iCol;
+			}
 
 		public void ShuffleValidValues() {
-
+			Collections.shuffle(lstValidValues);
 		}
 
 
@@ -487,30 +500,54 @@ public class Sudoku extends LatinSquare {
 				}
 			}
 		}
-
-		private void shuffleValidValues() {
-			// TODO Auto-generated method stub
-
-		}
-
-		private ArrayList<Integer> getAllValidCellValues(int iCol2, int iRow2) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		public boolean equals(Object obj) {
-			if (obj == this) {
-				return true;
+		
+		public Cell GetNextCell (Cell c) {
+			int iCol = c.getiCol() + 1;
+			int iRow = c.getiRow();
+			int iSqrtSize = (int) Math.sqrt(iSize);
+			
+			if(iCol >= iSize && iRow < iSize - 1) {
+				iRow = iRow +1;
+				iCol = 0;
 			}
-			if (!(obj instanceof Cell)) {
-				return false;
+			if(iRow >= iSize && iCol >= iSize)
+				return null;
+			if(iRow < iSqrtSize) {
+				if(iCol < iSqrtSize)
+					iCol = iSqrtSize;
 			}
-
-			Cell cell1 = (Cell) obj;
-			return (cell1.iRow == this.iRow) && (cell1.iCol == this.iCol);
+			else if (iRow < iSize - iSqrtSize) {
+				if(iCol == (int) (iRow / iSqrtSize)* iSqrtSize)
+					iCol = iCol + iSqrtSize;
+			}else {
+				if(iCol == iSize - iSqrtSize) {
+					iRow = iRow +1;
+					iCol = 0;
+				}
 			}
+			return (Cell)cells.get(Objects.hash(iRow, iCol));
 		}
+	}
 }
+		/*
+		private boolean fillRemaining(Cell c) {
+			if(c == null)
+				return true;
+			
+			for(int num: c.getLstValidValues()) {
+				if(isValidValue(c, num)) {
+					this.getPuzzle()[c.getiRow()][c.getiCol()] = num;
+					
+					if(fillRemaining(c.getNextCell(c)))
+						return true;
+					this.getPuzzle()[c.getiRow()][c.getiCol()] = 0;	
+				}
+			}
+		}
+		*/
+		
+		
+
 
 	
 		
