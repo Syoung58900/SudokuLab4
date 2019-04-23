@@ -204,7 +204,7 @@ public class Sudoku extends LatinSquare {
 	 * 
 	 * It's a LatinSquare If each region doesn't have duplicates If each element in
 	 * the first row of the puzzle is in each region of the puzzle At least one of
-	 * the elemnts is a zero
+	 * the elements is a zero
 	 * 
 	 * 
 	 * @version 1.2
@@ -337,7 +337,14 @@ public class Sudoku extends LatinSquare {
 				this.getPuzzle()[c.getiRow()][c.getiCol()] = 0;	
 			}
 		}
+		return false;
 	}
+
+	private boolean isValidValue(Cell c, int num) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 	/**
 	 * SetRegion - purpose of this method is to set the values of a given region
@@ -427,7 +434,7 @@ public class Sudoku extends LatinSquare {
 	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
 		HashSet<Integer> cellHashSet = new HashSet<Integer>();
 		Cell newCell = cells.get(Objects.hash(iRow, iCol));
-		newCell.setLstValidValues();
+		newCell.setlstValidValues(null);
 		if (this.getLatinSquare()[iRow][iCol] != 0) {
 			cellHashSet.add(this.getLatinSquare()[iRow][iCol]);
 		} else {
@@ -442,7 +449,7 @@ public class Sudoku extends LatinSquare {
 			for (int iCol = 0; iCol < iSize; iCol++) {
 				
 				Cell c = new Cell(iRow, iCol);
-				c.setLstValidValues(getAllValidCellValues(iCol, iRow));
+				c.setlstValidValues(getAllValidCellValues(iCol, iRow));
 				c.ShuffleValidValues();
 				cells.put(c.hashCode(), c);
 			}
@@ -486,7 +493,7 @@ public class Sudoku extends LatinSquare {
 			return lstValidValues;
 		}
 
-		public void setLstValidValues(HashSet<Integer> hsValidValues) {
+		public void setlstValidValues(HashSet<Integer> hsValidValues) {
 			lstValidValues = new ArrayList<Integer>(hsValidValues);
 		}
 
