@@ -72,6 +72,8 @@ public class Sudoku extends LatinSquare {
 		FillDiagonalRegions();
 		
 		SetCells();
+		
+		fillRemaining(this.cells.get(Objects.hash(0,0)));	
 	}
 
 
@@ -323,26 +325,23 @@ public class Sudoku extends LatinSquare {
 			ShuffleRegion(getRegionNbr(i, i));
 		}
 	}
-
-	private boolean fillRemaining(Cell c) {
-		if(c == null)
+	private boolean fillRemaining(Sudoku.Cell newCell) {
+		if (newCell == null)	
 			return true;
-		
-		for(int num: c.getLstValidValues()) {
-			if(isValidValue(c, num)) {
-				this.getPuzzle()[c.getiRow()][c.getiCol()] = num;
-				
-				if(fillRemaining(c.GetNextCell(c)))
+		for (int val : newCell.getLstValidValues()) {	
+			if (isValidValue(newCell, val)) {	
+				this.getPuzzle()[newCell.getiRow()][newCell.getiCol()] = val;	
+				if (fillRemaining(newCell.GetNextCell(newCell)))	
 					return true;
-				this.getPuzzle()[c.getiRow()][c.getiCol()] = 0;	
+				this.getPuzzle()[newCell.getiRow()][newCell.getiCol()] = 0;	
+				}
 			}
+		return false;
 		}
-		return false;
-	}
 
-	private boolean isValidValue(Cell c, int num) {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean isValidValue(Sudoku.Cell c, int iValue) {
+		Cell a = (Cell) this.cells.get(c.hashCode());
+		return a.getLstValidValues().contains(iValue);
 	}
 
 
@@ -434,7 +433,7 @@ public class Sudoku extends LatinSquare {
 	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
 		HashSet<Integer> cellHashSet = new HashSet<Integer>();
 		Cell newCell = cells.get(Objects.hash(iRow, iCol));
-		newCell.setlstValidValues(null);
+		newCell.setLstValidValues();
 		if (this.getLatinSquare()[iRow][iCol] != 0) {
 			cellHashSet.add(this.getLatinSquare()[iRow][iCol]);
 		} else {
@@ -443,13 +442,14 @@ public class Sudoku extends LatinSquare {
 		return cellHashSet;
 
 	}
+
 	
 	private void SetCells() {
 		for (int iRow = 0; iRow < iSize; iRow++) {
 			for (int iCol = 0; iCol < iSize; iCol++) {
 				
 				Cell c = new Cell(iRow, iCol);
-				c.setlstValidValues(getAllValidCellValues(iCol, iRow));
+				c.setLstValidValues(getAllValidCellValues(iCol, iRow));
 				c.ShuffleValidValues();
 				cells.put(c.hashCode(), c);
 			}
@@ -481,6 +481,11 @@ public class Sudoku extends LatinSquare {
 			this.iCol = iCol;
 		}
 
+		public void setLstValidValues(HashSet<Integer> allValidCellValues) {
+			// TODO Auto-generated method stub
+			
+		}
+
 		public int getiCol() {
 			return iCol;
 		}
@@ -492,10 +497,18 @@ public class Sudoku extends LatinSquare {
 		public ArrayList<Integer> getLstValidValues() {
 			return lstValidValues;
 		}
+		
+		public void setLstValidValues() {
+			HashSet<Integer> validHash = new HashSet<Integer>();
 
-		public void setlstValidValues(HashSet<Integer> hsValidValues) {
-			lstValidValues = new ArrayList<Integer>(hsValidValues);
-		}
+			for (int i = 1; i <= iSize; i++) {	
+				if (isValidValue(iRow, iCol, i)) {	
+					validHash.add(i);	
+					}
+				}
+			lstValidValues = new ArrayList<Integer>(validHash);
+			lstValidValues.trimToSize();
+			}
 
 		@Override
 		public int hashCode() {
