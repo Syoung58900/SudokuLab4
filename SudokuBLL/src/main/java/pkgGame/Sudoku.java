@@ -423,35 +423,16 @@ public class Sudoku extends LatinSquare {
 			ar[i] = a;
 		}
 	}
-
-	public Sudoku.Cell GetNextCell(Sudoku.Cell c) {
-
-		int row = c.getiRow();
-		int col = c.getiCol() + 1;
-
-		if (col >= iSize && row == iSize - iSqrtSize) {
-			return null;
+	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
+		HashSet<Integer> cellHashSet = new HashSet<Integer>();
+		Cell newCell = cells.get(Objects.hash(iRow, iCol));
+		newCell.setLstValidValues();
+		if (this.getLatinSquare()[iRow][iCol] != 0) {
+			cellHashSet.add(this.getLatinSquare()[iRow][iCol]);
+		} else {
+			cellHashSet = new HashSet<Integer>(newCell.getLstValidValues());
 		}
-		if (col >= iSize) {
-			row++;
-			col = 0;
-		}
-		while (row < iSqrtSize && col < iSqrtSize) {
-			col++;
-			while (row >= iSqrtSize && row < iSize - iSqrtSize && col >= iSqrtSize && col < iSize - iSqrtSize) {
-				col++; // shift right
-			}
-			while (row >= iSize - iSqrtSize && row < iSize && col >= iSize - iSqrtSize && col < iSize) {
-				col++; // shift to the end
-			}
-			if (col >= iSize) {
-				row++;
-				col = 0;
-			}
-
-			return Cell.get(Objects.hash(row, col));
-
-		}
+		return cellHashSet;
 	}
 	
 	private void SetCells() {
@@ -459,7 +440,7 @@ public class Sudoku extends LatinSquare {
 			for (int iCol = 0; iCol < iSize; iCol++) {
 				
 				Cell c = new Cell(iRow, iCol);
-				c.setlstValidValues(getAllValidCellValues(iCol, iRow));
+				c.setLstValidValues(getAllValidCellValues(iCol, iRow));
 				c.ShuffleValidValues();
 				cells.put(c.hashCode(), c);
 			}
@@ -478,17 +459,7 @@ public class Sudoku extends LatinSquare {
 			}
 		}
 	}
-	/*
-	private HashSet<Integer> getAllValidCellValues(int iCol, int iRow){
-		HashSet<Integer> hsCellRange = new HashSet<Integer>();
-		if(this.getPuzzle()[iRow][iCol] > 0) {
-			hsCellRange.add(new Integer(this.getPuzzle()[iRow][iCol]));
-				return hsCellRange;
-		}
-		for()
-		}
-	}
-	*/
+	
 
 	private class Cell {
 		private int iCol;
