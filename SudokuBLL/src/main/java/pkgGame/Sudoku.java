@@ -423,17 +423,6 @@ public class Sudoku extends LatinSquare {
 			ar[i] = a;
 		}
 	}
-	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
-		HashSet<Integer> cellHashSet = new HashSet<Integer>();
-		Cell newCell = cells.get(Objects.hash(iRow, iCol));
-		newCell.setLstValidValues();
-		if (this.getLatinSquare()[iRow][iCol] != 0) {
-			cellHashSet.add(this.getLatinSquare()[iRow][iCol]);
-		} else {
-			cellHashSet = new HashSet<Integer>(newCell.getLstValidValues());
-		}
-		return cellHashSet;
-	}
 	
 	private HashSet<Integer> getAllValidCellValues(int iRow, int iCol) {
 		HashSet<Integer> cellHashSet = new HashSet<Integer>();
